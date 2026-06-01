@@ -13,7 +13,7 @@ struct Graph {
   char vertices[max][label_size];
   int adjacency[max][max];
   int vertexCount;
-}
+};
 
 //initializes graph
 void initGraph(Graph &g) {
@@ -124,8 +124,75 @@ void printTable(Graph &g)
   }
 }
 
+//shortest path algorithim
+void shortestPath(Graph &g, char start[], char end[])
+{
+  int s = getIndex(g, start);
+  int e = getIndex(g, end);
+  if (s == -1 || e == -1)
+  {
+    cout << "Invalid vertex :(" << endl;
+    return;
+  }
+  int dist[max];
+  bool visited[max];
+  int prev[max];
+  for (int i = 0; i < g.vertexCount; i++)
+  {
+    dist[i] = INT_MAX;
+    visited[i] = false;
+    prev[i] = -1;
+  }
+
+  dist[s] = 0;
+  for (int i = 0; i < g.vertexCount - 1; i++)
+  {
+    int u = -1;
+    int minDist = INT_MAX;
+    for (int j = 0; j < g.vertexCount; j++)
+    {
+      if (!visited[j] && dist[j] < minDist)
+      {
+        minDist = dist[j];
+        u = j;
+      }
+    }
+    if (u == -1) {
+      break;
+    }
+    visited[u] = true;
+    for (int v = 0; v < g.vertexCount; v++) {
+      if (g.adjacency[u][v] > 0 && !visited[v] && dist[u] != INT_MAX && dist[u] + g.adjacency[u][v] < dist[v])
+        {
+          dist[v] = dist[u] + g.adjacency[u][v];
+          prev[v] = u;
+        }
+    }
+  }
+
+  if (dist[e] == INT_MAX)
+  {
+    cout << "No path exists." << endl;
+    return;
+  }
+  int path[max];
+  int size = 0;
+  for (int at = e; at != -1; at = prev[at]) {
+    path[size++] = at;
+  }
+  cout << "\nShortest Path:" << endl;
+  for (int i = size - 1; i >= 0; i--)
+  {
+    cout << g.vertices[path[i]];
+    if (i > 0) {
+      cout << " -> ";
+    }
+  }
+  cout << "\nTotal Weight: " << dist[e] << endl;
+}
+
 //main function for options
-int main {
+int main() {
   Graph g;
   initGraph(g);
   int choice = 1;
@@ -171,7 +238,7 @@ int main {
       cin >> v2;
       removeEdge(g, v1, v2);
     }
-    else if (choice == 5) //haven't done this section yet
+    else if (choice == 5) 
     {
       cout << "Start: ";
       cin >> v1;
@@ -192,4 +259,5 @@ int main {
       cout << "Invalid choice." << endl;
     }
   }
+  return 0;
 }
