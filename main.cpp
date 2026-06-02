@@ -5,21 +5,21 @@
 using namespace std;
 
 //variables for functions
-const int max = 20;
+const int max_vertices = 20;
 const int label_size = 20;
 
 //graph struct
 struct Graph {
-  char vertices[max][label_size];
-  int adjacency[max][max];
+  char vertices[max_vertices][label_size];
+  int adjacency[max_vertices][max_vertices];
   int vertexCount;
 };
 
 //initializes graph
 void initGraph(Graph &g) {
   g.vertexCount = 0;
-  for (int i = 0; i < max; i++)
-    for (int j = 0; j < max; j++)
+  for (int i = 0; i < max_vertices; i++)
+    for (int j = 0; j < max_vertices; j++)
       g.adjacency[i][j] = 0;
 }
 
@@ -36,7 +36,7 @@ int getIndex(Graph &g, char label[]) {
 //adding vertex
 void addVertex(Graph &g, char label[])
 {
-  if (g.vertexCount >= max)
+  if (g.vertexCount >= max_vertices)
   {
     cout << "Graph is full" << endl;
     return;
@@ -134,12 +134,12 @@ void shortestPath(Graph &g, char start[], char end[])
     cout << "Invalid vertex :(" << endl;
     return;
   }
-  int dist[max];
-  bool visited[max];
-  int prev[max];
+  int dist[max_vertices];
+  bool visited[max_vertices];
+  int prev[max_vertices];
   for (int i = 0; i < g.vertexCount; i++)
   {
-    dist[i] = INT_MAX;
+    dist[i] = INT_MAX; //found this online with climits and how it gets maximum possible integer
     visited[i] = false;
     prev[i] = -1;
   }
@@ -175,7 +175,7 @@ void shortestPath(Graph &g, char start[], char end[])
     cout << "No path exists." << endl;
     return;
   }
-  int path[max];
+  int path[max_vertices];
   int size = 0;
   for (int at = e; at != -1; at = prev[at]) {
     path[size++] = at;
